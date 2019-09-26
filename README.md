@@ -1,26 +1,41 @@
 # egg-session
 
-[![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
-[![Test coverage][codecov-image]][codecov-url]
-[![David deps][david-image]][david-url]
-[![Known Vulnerabilities][snyk-image]][snyk-url]
-[![npm download][download-image]][download-url]
+# 源码分析
 
-[npm-image]: https://img.shields.io/npm/v/egg-session.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/egg-session
-[travis-image]: https://img.shields.io/travis/eggjs/egg-session.svg?style=flat-square
-[travis-url]: https://travis-ci.org/eggjs/egg-session
-[codecov-image]: https://codecov.io/github/eggjs/egg-session/coverage.svg?branch=master
-[codecov-url]: https://codecov.io/github/eggjs/egg-session?branch=master
-[david-image]: https://img.shields.io/david/eggjs/egg-session.svg?style=flat-square
-[david-url]: https://david-dm.org/eggjs/egg-session
-[snyk-image]: https://snyk.io/test/npm/egg-session/badge.svg?style=flat-square
-[snyk-url]: https://snyk.io/test/npm/egg-session
-[download-image]: https://img.shields.io/npm/dm/egg-session.svg?style=flat-square
-[download-url]: https://npmjs.org/package/egg-session
+将koa-session作为中间件挂载，并提供了sessionStore，方便自定义存取器，供给config.session.store。
 
-Session plugin for egg, based on [koa-session](https://github.com/koajs/session).
+## 文件结构
+
+``` bash
+├── app
+|  ├── extend
+|  |  └── application.js - 通过set app.sessionStore来将Store挂载到config.session.store上，给koa-session将其作为自定义store处理。
+|  └── middleware
+|     └── session.js - 直接暴露koa-session，中间件
+├── app.js - 监听事件报日志
+├── config
+|  └── config.default.js - 一些配置参数
+```
+
+## 外部模块依赖
+
+![](./graphviz/module.svg)
+
+koa-session[源码分析](https://github.com/FunnyLiu/session/tree/readsource)
+
+## 逐个文件分析
+
+### app.js
+
+将middleware文件夹下的中间件session.js推入middleware列表中。
+
+### app/extend/application.js
+
+通过set app.sessionStore来将Store挂载到config.session.store上，给koa-session将其作为自定义store处理，koa-session默认是用cookie来存取。
+
+### app/middleware/session.js
+
+直接依赖koa-session模块并对外暴露
 
 ## Install
 

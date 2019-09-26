@@ -23,6 +23,8 @@ module.exports = {
    * ```
    * @param  {Class|Object} store session store class or instance
    */
+  // 通过sessionStore，来指定自定义的session存取器
+  // koa-session默认是用cookie来存取
   set sessionStore(store) {
     if (this.config.session.store && this.config.env !== 'unittest') {
       this.logger.warn('[egg-session] sessionStore already exists and will be overwrite');
@@ -41,6 +43,7 @@ module.exports = {
     store.get = this.toAsyncFunction(store.get);
     store.set = this.toAsyncFunction(store.set);
     store.destroy = this.toAsyncFunction(store.destroy);
+    //存到config的session上，koa-session有store参数用来自定义存储器
     this.config.session.store = store;
   },
 
